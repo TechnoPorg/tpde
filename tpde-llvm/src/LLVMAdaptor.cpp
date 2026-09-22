@@ -289,6 +289,15 @@ bool LLVMAdaptor::switch_func(const IRFuncRef function) {
 #endif
 
   for (llvm::BasicBlock &block : *function) {
+#if LLVM_VERSION_MAJOR >= 23
+    // For LLVM 23+, we use the Order field to store instruction local indices.
+    // While in the end they are guaranteed to be ascending and correct, this is
+    // not the case when inserting instructions during numbering. Therefore,
+    // conservatively invalidate ordering. Do this unconditionally to be on the
+    // safe side as this is a cheap operation (clearing one bit in BasicBlock),
+    // even if this is only required in !NDEBUG builds.
+    block.invalidateOrders();
+#endif
     auto it = block.begin(), end = block.end();
     // In the first pass, fixup all constants in phis. This might insert
     // instructions into all predecessors.
