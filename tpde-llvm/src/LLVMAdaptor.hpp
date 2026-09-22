@@ -29,16 +29,27 @@ namespace tpde_llvm {
 
 // very hacky
 inline u32 &val_idx_for_inst(llvm::Instruction *inst) {
+#if LLVM_VERSION_MAJOR >= 24
+  // LLVM 24 made DebugMarker private...
+  static_assert(sizeof(llvm::Instruction) == 72);
+  return *reinterpret_cast<u32 *>(reinterpret_cast<u8 *>(inst) + 60);
+#else
   return *reinterpret_cast<u32 *>(reinterpret_cast<u8 *>(inst) +
                                   offsetof(llvm::Instruction, DebugMarker) - 4);
-  // static_assert(sizeof(llvm::Instruction) == 64);
+#endif
 }
 
 inline u32 val_idx_for_inst(const llvm::Instruction *inst) {
+#if LLVM_VERSION_MAJOR >= 24
+  // LLVM 24 made DebugMarker private...
+  static_assert(sizeof(llvm::Instruction) == 72);
+  return *reinterpret_cast<const u32 *>(reinterpret_cast<const u8 *>(inst) +
+                                        60);
+#else
   return *reinterpret_cast<const u32 *>(
       reinterpret_cast<const u8 *>(inst) +
       offsetof(llvm::Instruction, DebugMarker) - 4);
-  // static_assert(sizeof(llvm::Instruction) == 64);
+#endif
 }
 
 #if LLVM_VERSION_MAJOR < 20
