@@ -5,7 +5,6 @@
 
 ; RUN: tpde-llc --target=x86_64 %s | %objdump | FileCheck %s -check-prefixes=X64
 ; RUN: tpde-llc --target=aarch64 %s | %objdump | FileCheck %s -check-prefixes=ARM64
-; XFAIL: llvm23.1
 
 define void @free_intrinsics(ptr %p) {
 ; X64-LABEL: <free_intrinsics>:
@@ -62,7 +61,7 @@ declare void @llvm.var.annotation(ptr, ptr, ptr, i32, ptr)
 !llvm.module.flags = !{!7}
 
 !0 = !DILocalVariable(scope: !1)
-!1 = distinct !DISubprogram(name: "dummy", line: 79, isLocal: true, isDefinition: true, virtualIndex: 6, flags: DIFlagPrototyped, isOptimized: true, file: !3, unit: !9)
+!1 = distinct !DISubprogram(name: "dummy", line: 79, isLocal: true, isDefinition: true, virtualIndex: 6, flags: DIFlagPrototyped, isOptimized: true, file: !3, unit: !9, type: !12)
 !2 = !DILabel(scope: !1, name: "label", file: !3, line: 7)
 !3 = !DIFile(filename: "debug-label.c", directory: "./")
 !4 = !{ !5 }
@@ -72,3 +71,5 @@ declare void @llvm.var.annotation(ptr, ptr, ptr, i32, ptr)
 !8 = !DILocation(line: 0, scope: !1)
 !9 = distinct !DICompileUnit(language: DW_LANG_C11, file: !3, producer: "clang")
 !10 = distinct !DIAssignID()
+!11 = !{null}
+!12 = !DISubroutineType(types: !11)
